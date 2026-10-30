@@ -3,7 +3,9 @@
   function cagr(rs){return Math.exp(rs.reduce((s,r)=>s+Math.log1p(r),0)/rs.length)-1;}
   function historical(data,weights,start){
     const ids=data.years.map((y,i)=>i).filter(i=>data.years[i]>=start);
-    const returns=ids.map(i=>weights.reduce((s,w,j)=>s+w*data.assets[j].returns[i]/100,0));
+    if(ids.length!==2026-start)throw Error('אין נתונים מלאים לתקופה שנבחרה');
+    const missing=data.assets.filter((a,j)=>weights[j]>0&&ids.some(i=>!Number.isFinite(a.returns[i])));if(missing.length)throw Error('אין היסטוריה מלאה לתקופה שנבחרה עבור '+missing.map(a=>a.name).join(', ')+'. יש לבחור 10 שנים או להסיר את הנכס מההקצאה.');
+    const returns=ids.map(i=>weights.reduce((s,w,j)=>s+(w===0?0:w*data.assets[j].returns[i]/100),0));
     return {returns,years:ids.map(i=>data.years[i]),cagr:cagr(returns),worst:Math.min(...returns)};
   }
   function project(p,r,monthly,years){
@@ -18,7 +20,7 @@
     if([p.initial,p.monthly,p.existing,p.existingMonthly,p.fee,...p.weights].some(v=>v<0)||p.fee>=1||p.weights.some(v=>v>1))throw Error('סכומים ומשקלים חייבים להיות חיוביים או אפס, ועלויות קטנות מ 100%');
     if(Math.abs(p.weights.reduce((a,b)=>a+b,0)-1)>1e-8)throw Error('סכום המשקלים חייב להיות 100%');
     if(p.fx<=-1||p.inflation<=-1)throw Error('הנחת מטבע ואינפלציה חייבת להיות גדולה ממינוס 100%');
-    if(![2016,2021].includes(p.start))throw Error('תקופת עבר לא תקינה');
+    if(![1996,2006,2016,2021].includes(p.start))throw Error('תקופת עבר לא תקינה');
     const h=historical(data,p.weights,p.start);
     const base=p.mode==='manual'?p.manual:h.cagr;
     if(!Number.isFinite(base)||base<=-1)throw Error('תשואה שנתית חייבת להיות גדולה ממינוס 100%');
