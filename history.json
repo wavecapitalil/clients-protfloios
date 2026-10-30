@@ -1,0 +1,11 @@
+{
+  "asOf": "2026-10-30",
+  "period": "2016 עד 2025",
+  "years": [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+  "assets": [
+    {"id":"sp500","name":"S&P 500","proxy":"IVV","returns":[11.9,21.8,-4.4,31.4,18.4,28.7,-18.1,26.3,25.0,17.8],"basis":"תשואה כוללת בדולר לפי שווי נכסי הקרן, כולל השקעה מחדש של חלוקות. נתונים מעוגלים לעשירית אחוז.","source":"https://www.ishares.com/uk/professionals/en/products/239726/ivv?siteEntryPassthrough=true","sourceType":"מנפיק הקרן"},
+    {"id":"nasdaq","name":"Nasdaq 100","proxy":"QQQ","returns":[7.10,32.66,-0.12,38.96,48.62,27.42,-32.58,54.85,25.58,20.77],"basis":"תשואה כוללת בדולר של קרן מייצגת, כולל חלוקות. מקור משני, טרם בוצע אימות מלא של כל שנה מול המנפיק.","source":"https://finance.yahoo.com/quote/QQQ/performance/","sourceType":"Yahoo Finance, מקור משני"},
+    {"id":"gold","name":"זהב","proxy":"GLD","returns":[8.03,12.81,-1.94,17.86,24.81,-4.15,-0.77,12.69,26.66,63.68],"basis":"תשואת קרן זהב דולרית, לאחר הוצאות הקרן. מקור משני, טרם בוצע אימות מלא של כל שנה מול המנפיק.","source":"https://finance.yahoo.com/quote/GLD/performance/","sourceType":"Yahoo Finance, מקור משני"},
+    {"id":"bitcoin","name":"ביטקוין","proxy":"BTC","returns":[123.83,1368.90,-73.56,92.20,303.16,59.67,-64.27,155.42,121.05,-6.34],"basis":"שינוי מחיר בדולר מסוף שנה לסוף שנה, ללא תשואת ריבית וללא הוצאות מוצר השקעה. מקור משני, טרם בוצע אימות מלא מול זירת מסחר.","source":"https://www.slickcharts.com/currency/BTC/returns","sourceType":"Slickcharts, מקור משני"}
+  ]
+}
