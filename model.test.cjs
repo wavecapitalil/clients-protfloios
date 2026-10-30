@@ -10,4 +10,13 @@ assert.throws(()=>M.calculate(d,{...p,weights:[-1,2,0,0]}));
 const a=M.calculate(d,{...p,mode:'history'}),b=M.calculate(d,{...p,mode:'history',weights:[0,0,0,1]});assert.notEqual(a.net,b.net);assert.equal(a.last.existing,b.last.existing);
 const x=M.calculate(d,{...p,initial:300000,existingRate:0});assert.equal(x.last.existing,192000);
 assert.equal(M.historical(d,[1,0,0,0],2021).years.length,5);
+for(const start of [2016,2006,1996]){
+  const h=M.historical(d,[.6,.3,.1,0],start);
+  assert.equal(h.years.length,2026-start);
+  const independent=h.returns.reduce((v,r)=>v*(1+r),1)**(1/(2026-start))-1;
+  assert.ok(Math.abs(h.cagr-independent)<1e-12);
+}
+assert.throws(()=>M.historical(d,[.9,0,0,.1],2006),/אין היסטוריה מלאה/);
+assert.throws(()=>M.historical(d,[.9,0,0,.1],1996),/אין היסטוריה מלאה/);
+assert.equal(M.historical(d,[0,0,0,1],2016).returns.length,10);
 console.log('Model checks passed: zero return, contributions, target age, missing input, weights, account separation, historical allocation.');
