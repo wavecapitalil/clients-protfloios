@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),M=require('./model.js'),d=JSON.parse(fs.readFileSync(__dirname+'/history.json'));
+const p={age:25,target:40,initial:150000,monthly:1000,existing:174000,existingMonthly:100,existingRate:null,mode:'manual',manual:0,start:2016,fx:0,fee:0,inflation:0,weights:[1,0,0,0]};
+let r=M.calculate(d,p);assert.equal(r.last.own,330000);assert.equal(r.last.paid,330000);assert.equal(r.last.combined,null);
+r=M.calculate(d,{...p,existingRate:0});assert.ok(Math.abs(r.last.combined-522000)<1e-6);
+r=M.calculate(d,{...p,target:25,manual:.1});assert.equal(r.last.own,150000);assert.equal(r.points.length,1);
+r=M.calculate(d,{...p,target:30,monthly:0,manual:.06});assert.ok(Math.abs(r.last.own-150000*1.06**5)<1e-6);
+r=M.calculate(d,{...p,target:30,initial:0,manual:.06});const mr=1.06**(1/12)-1;assert.ok(Math.abs(r.last.own-1000*((1+mr)**60-1)/mr)<1e-5);
+assert.throws(()=>M.calculate(d,{...p,weights:[.5,0,0,0]}));assert.throws(()=>M.calculate(d,{...p,monthly:NaN}));assert.throws(()=>M.calculate(d,{...p,target:24}));assert.throws(()=>M.calculate(d,{...p,manual:-1}));
+assert.throws(()=>M.calculate(d,{...p,weights:[-1,2,0,0]}));
+const a=M.calculate(d,{...p,mode:'history'}),b=M.calculate(d,{...p,mode:'history',weights:[0,0,0,1]});assert.notEqual(a.net,b.net);assert.equal(a.last.existing,b.last.existing);
+const x=M.calculate(d,{...p,initial:300000,existingRate:0});assert.equal(x.last.existing,192000);
+assert.equal(M.historical(d,[1,0,0,0],2021).years.length,5);
+console.log('Model checks passed: zero return, contributions, target age, missing input, weights, account separation, historical allocation.');
